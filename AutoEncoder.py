@@ -110,18 +110,23 @@ class AutoEncoder(nn.Module):
         # input_size = output_size
         # output_size = input_size * 24
         # self.d5 = nn.Linear(input_size, output_size, bias=False)
+        self.leackyRelu1 = nn.LeakyReLU(0.1)
+        self.leackyRelu2 = nn.LeakyReLU(0.1)
+        self.leackyRelu3 = nn.LeakyReLU(0.1)
+        self.leackyRelu4 = nn.LeakyReLU(0.1)
 
+        self.leackyRelu5 = nn.LeakyReLU(0.1)
 
     def forward(self, x):
 
-        x = torch.relu(self.e1(x))
-        x = torch.relu(self.e2(x))
+        x = self.leackyRelu1(self.e1(x))
+        x = self.leackyRelu2(self.e2(x))
         # x = torch.relu(self.e3(x))
         # x = torch.relu(self.e4(x))
-        latent = torch.relu(self.e3(x))
+        latent = self.leackyRelu3(self.e3(x))
 
-        x = torch.relu(self.d1(latent))
-        x = torch.relu(self.d2(x))
+        x = self.leackyRelu4(self.d1(latent))
+        x = self.leackyRelu5(self.d2(x))
         # x = torch.relu(self.d3(x))
         # x = torch.relu(self.d4(x))
         x = torch.sigmoid(self.d3(x))
@@ -132,13 +137,6 @@ def kl_divergence(rho, rho_hat, device):
     rho = torch.tensor([rho] * len(rho_hat)).to(device)
     return torch.sum(rho * torch.log(rho/rho_hat) + (1 - rho) * torch.log((1 - rho)/(1 - rho_hat)))
 # define the sparse loss function
-def sparse_loss(rho, images):
-    values = images
-    loss = 0
-    for i in range(len(model_children)):
-        values = model_children[i](values)
-        loss += kl_divergence(rho, values)
-    return loss
 
 class CustomLoss(nn.Module):
     def __init__(self):
@@ -182,7 +180,7 @@ class DiceLoss(nn.Module):
         return 1 - dice
 
 
-def train(model, train_dataloader, val_dataloader, lr, EPOCHES, Loss, device, use_sparsity):
+def train(model, train_dataloader, val_dataloader, lr, EPOCHES, Loss, device, use_sparsity = False, Loss2 = None):
     model = model.to(device)
     model_parameters = filter(lambda p: p.requires_grad, model.parameters())
     params = sum([np.prod(p.size()) for p in model_parameters])
@@ -219,9 +217,11 @@ def train(model, train_dataloader, val_dataloader, lr, EPOCHES, Loss, device, us
                 loss = loss + 0.1 * sparse_loss
 
             train_loss.append(loss.cpu().data.item())
+            if Loss2 is not None:
+                loss += 0.1 * Loss2(reconst_x, x)
 
             loss.backward()
-            # torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm = 1)
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm = 1)
             optimizer.step()
 
             counter = 0
