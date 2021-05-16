@@ -1,7 +1,7 @@
 # DataMiningCup21
 Respository for the Data Mining Seminar SoSe 2021
 
-In this branch you can find:
+In this branch you can find: \n
   scripts for preprocessing: preprocessing.py
   script for autoencoder: AutoEncoder.py and main.py
   script for SVD and tsne: SVD.py and manifold_learning.py
