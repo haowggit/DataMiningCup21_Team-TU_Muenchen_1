@@ -1,4 +1,4 @@
-// Scraping Amazon for book recommendations - Part 2
+// Scraping Amazon for book recommendations - Part 1
 // This script retrieves the Amazon URL for books in the test set.
 
 // Activate puppeteer
