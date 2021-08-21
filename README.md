@@ -8,4 +8,5 @@ In this branch you can find: <br/>
   * scripts for scraping Amazon for book recommendation in the folder "Amazon model"  <br/>
   * scripts and intermediate data for clustering model in the folder "clustering model"  <br/>
   * scripts for preprocessing: preprocessing.py <br/>
+  * original data
  
