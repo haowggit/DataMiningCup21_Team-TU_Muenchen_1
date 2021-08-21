@@ -43,7 +43,8 @@ def preprocessing(item_path=os.path.join(os.getcwd(), 'items.csv'),
                         quoting=csv.QUOTE_NONE)
     transactions = pd.read_csv(transaction_path, header=0, encoding='utf-8', sep='|',
                                quoting=csv.QUOTE_NONE)
-
+    eval = pd.read_csv('evaluation.csv', header=0, encoding='utf-8', sep='|',
+                       quoting=csv.QUOTE_NONE)
 
 
     ## fill missing publisher with data collected from Amazon, Apple Books
@@ -76,6 +77,7 @@ def preprocessing(item_path=os.path.join(os.getcwd(), 'items.csv'),
     ] = missing_sub['subtopics'].apply(find_topic)
 
     ## cleaning author
+    # items.set_index('itemID')
     items['author'] = items['author'].replace({'^,': ''}, regex=True)
     items['author'] = items['author'].replace({'^-': ''}, regex=True)
     items['author'] = items['author'].replace({'^-': ''}, regex=True)
@@ -87,12 +89,21 @@ def preprocessing(item_path=os.path.join(os.getcwd(), 'items.csv'),
         duplicated = items.duplicated(keep=False, subset=subset)
         duplicated_ids = items[duplicated]['itemID']
 
-        # not remove those that occur in transactions data
-        removable_ids = pd.Series(list(set(duplicated_ids) - set(transactions.itemID)))
+        # not remove those that occur in transactions data and evaluation data
+        _re = set(transactions.itemID).union(set(eval.itemID))
+        removable_ids = pd.Series(list((set(duplicated_ids) - _re)))
         duplicated_items = items[items['itemID'].isin(removable_ids)]
         still_duplicated = duplicated_items.duplicated(subset=subset)
         duplicated_items = duplicated_items[still_duplicated]
         del_ids = duplicated_items['itemID']
-        items = items[~items['itemID'].isin(del_ids)]
+        items = items.drop(items[items['itemID'].isin(del_ids)].index)
+        items = items.reset_index(drop=True)
+        # items[~items['itemID'].isin(del_ids)]
+        # df.drop(df[ < some
+        # boolean
+        # condition >].index)
 
-    return items, transactions
+    items['subtopics'] = items['subtopics'].replace({'^\[': ''}, regex=True)
+    items['subtopics'] = items['subtopics'].replace({'\]$': ''}, regex=True)
+
+    return items, transactions, eval
