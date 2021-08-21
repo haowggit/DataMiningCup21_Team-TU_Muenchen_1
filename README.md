@@ -1,4 +1,4 @@
-# DataMiningCup21
+# DataMiningCup21_Team_TUMuenchen1
 Respository for the Data Mining Seminar SoSe 2021
 
 In this branch you can find: <br/>
