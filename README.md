@@ -1,5 +1,5 @@
 # DataMiningCup21_Team_TUMuenchen1
-Respository for the Data Mining Seminar SoSe 2021
+Respository for the Data Mining Seminar SoSe 2021 of TU Munich 
 
 In this branch you can find: <br/>
   * scripts for loading and merge external data in the folder "External Data"<br/>
