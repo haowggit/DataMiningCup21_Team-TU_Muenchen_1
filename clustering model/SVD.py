@@ -2,16 +2,8 @@ import sklearn.preprocessing
 import pandas as pd
 import numpy as np
 import scipy
-import umap
 from sklearn.decomposition import TruncatedSVD
 
-
-def learn_manifold(x_data, umap_min_dist = 0.00, umap_metric = 'euclidean', umap_dim = 10, umap_neighbors = 30):
-    md = float(umap_min_dist)
-    umap_learning = umap.UMAP(random_state=0, metric=umap_metric, n_components=umap_dim, n_neighbors=umap_neighbors,
-              min_dist=md)
-    umap_learning.fit_transform(x_data)
-    return umap
 
 
 

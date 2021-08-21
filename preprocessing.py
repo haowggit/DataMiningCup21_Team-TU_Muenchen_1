@@ -43,7 +43,7 @@ def preprocessing(item_path=os.path.join(os.getcwd(), 'items.csv'),
                         quoting=csv.QUOTE_NONE)
     transactions = pd.read_csv(transaction_path, header=0, encoding='utf-8', sep='|',
                                quoting=csv.QUOTE_NONE)
-    eval = pd.read_csv('evaluation.csv', header=0, encoding='utf-8', sep='|',
+    eval = pd.read_csv('clustering model/evaluation.csv', header=0, encoding='utf-8', sep='|',
                        quoting=csv.QUOTE_NONE)
 
 

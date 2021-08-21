@@ -146,7 +146,7 @@ result = result[list(itemsOrig.columns) + list(['titleMatch', 'authorMatch', 'pu
 #pd.to_pickle(result, r'External Data_final.pkl')
 
 #Test how many matches we have for evaluation dataset
-evaluation = pd.read_csv(r'../evaluation.csv')
+evaluation = pd.read_csv(r'../clustering model/evaluation.csv')
 evaluation = evaluation.merge(result, how = 'left', on = 'itemID')
 #How many items of evaluation do not have a match?
 missingItemIDsEvaluation = evaluation[evaluation.titleMatch.isnull()].shape[0]

@@ -12,6 +12,8 @@ from sklearn import manifold
 from sklearn.decomposition import TruncatedSVD
 from sklearn.neighbors import NearestNeighbors
 from preprocessing import *
+import umap
+
 # Next line to silence pyflakes. This import is needed.
 Axes3D
 
@@ -69,6 +71,15 @@ Axes3D
 #     ax.axis('tight')
 #
 #
+
+def learn_manifold(x_data, umap_min_dist = 0.00, umap_metric = 'euclidean', umap_dim = 10, umap_neighbors = 30):
+    md = float(umap_min_dist)
+    umap_learning = umap.UMAP(random_state=0, metric=umap_metric, n_components=umap_dim, n_neighbors=umap_neighbors,
+              min_dist=md)
+    umap_learning.fit_transform(x_data)
+    return umap
+
+
 X = np.load('svd_dataset_2500.npy')
 
 neigh = NearestNeighbors(n_neighbors=15, radius=0.4)
